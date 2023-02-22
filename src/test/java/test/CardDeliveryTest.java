@@ -4,10 +4,15 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import data.DataGenerator;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -15,14 +20,21 @@ import java.time.LocalDate;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
-
-
-public class CardDeliveryTest {
-    @BeforeEach
-    void setup() {
-        open("http://localhost:9999");
+    public class CardDeliveryTest {
+        WebDriver driver;
+        @BeforeAll
+        static void setupAll() {
+            WebDriverManager.chromedriver().setup();
     }
-
+        @BeforeEach
+        void setup() {
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("--disable-dev-shm-usage");
+            options.addArguments("--no-sandbox");
+            options.addArguments("--headless");
+            driver = new ChromeDriver(options);
+            open("http://localhost:9999");
+    }
     @Test
     @DisplayName("Should successful plan and replan meeting")
     void shouldSuccessfulPlanAndReplanMeeting() {
