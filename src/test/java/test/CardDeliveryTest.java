@@ -20,21 +20,13 @@ import java.time.LocalDate;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
-    public class CardDeliveryTest {
-        WebDriver driver;
-        @BeforeAll
-        static void setupAll() {
-            WebDriverManager.chromedriver().setup();
+
+public class CardDeliveryTest {
+    @BeforeEach
+    void setup() {
+        open("http://localhost:9999");
     }
-        @BeforeEach
-        void setup() {
-            ChromeOptions options = new ChromeOptions();
-            options.addArguments("--disable-dev-shm-usage");
-            options.addArguments("--no-sandbox");
-            options.addArguments("--headless");
-            driver = new ChromeDriver(options);
-            open("http://localhost:9999");
-    }
+
     @Test
     @DisplayName("Should successful plan and replan meeting")
     void shouldSuccessfulPlanAndReplanMeeting() {
@@ -56,10 +48,12 @@ import static com.codeborne.selenide.Selenide.*;
         $("[data-test-id=date] input").setValue(secondMeetingDate);
         $(byText("Запланировать")).click();
         $("[data-test-id='replan-notification'] .notification__content")
-                .shouldHave(text("У вас уже запланирована встреча на другую дату. Перепланировать?"));
+                .shouldHave(text("У вас уже запланирована встреча на другую дату. Перепланировать?"))
+                .shouldBe(visible);
         $("[data-test-id='replan-notification'] button").click();
         $("[data-test-id='success-notification'] .notification__content")
-                .shouldHave(exactText("Встреча успешно запланирована на " + secondMeetingDate));
+                .shouldHave(exactText("Встреча успешно запланирована на " + secondMeetingDate))
+                .shouldBe(visible);
     }
 }
 
